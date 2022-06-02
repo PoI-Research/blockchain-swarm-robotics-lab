@@ -1,0 +1,3 @@
+export const RUN_EXPERIMENTS: string = "RUN_EXPERIMENTS";
+export const EXPERIMENT_DATA: string = "EXPERIMENT_DATA";
+export const EXPERIMENT_COMPLETED: string = "EXPERIMENT_COMPLETED";
