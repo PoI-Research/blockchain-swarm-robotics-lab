@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FunctionComponent, ReactElement, useState } from "react";
+import { ExperimentDataView, ExperimentForm, Queue } from "./components";
+import { Experiment } from "./model/experiment";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App: FunctionComponent = (): ReactElement => {
+    const [queue, setQueue] = useState<Experiment[]>([]);
 
-export default App;
+    const addToQueue = (experiment: Experiment) => {
+        setQueue((queue) => {
+            const newQueue = [ ...queue, experiment ];
+
+            return newQueue;
+        });
+    };
+
+    return (
+        <>
+            <ExperimentForm addToQueue={addToQueue} />
+            <Queue queue={ queue } />
+            <ExperimentDataView />
+        </>
+    );
+};
