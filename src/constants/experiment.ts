@@ -1,0 +1,17 @@
+export enum DECISION_RULE {
+    DMVD,
+    DC,
+    DMMD
+}
+
+export enum BYZANTINE_SWARM_STYLE {
+    NO_BYZANTINE_ROBOTS,
+    WHITE_BYZANTINE_ROBOTS,
+    BLACK_BYZANTINE_ROBOTS,
+    BLACK_WHITE_BYZANTINE_ROBOTS
+}
+
+export enum CONSENSUS_ALGORITHM {
+    POW = "pow",
+    POI = "poi"
+}
