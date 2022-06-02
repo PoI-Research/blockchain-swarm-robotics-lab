@@ -1,40 +1,41 @@
-import { FunctionComponent, ReactElement, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { FunctionComponent, ReactElement, useEffect, useRef, useState } from "react";
 import { getExperimentData } from "../apis";
 import { EXPERIMENT_DATA } from "../constants";
 import { ExperimentData } from "../model";
-
-const socket = io(process.env.REACT_APP_ENDPOINT as string);
+import { socket } from "../utils";
 
 export const ExperimentDataView: FunctionComponent = (): ReactElement => {
     const [ liveData, setLiveData ] = useState<ExperimentData[]>([]);
+    const init = useRef(true);
 
     useEffect(() => {
-        socket.on("A", (a)=>console.log(a))
         getExperimentData()
             .then((response) => {
                 setLiveData(response);
             })
             .finally(() => {
-                socket.on(EXPERIMENT_DATA, (data: ExperimentData) => {
-                    console.log(data);
-                    setLiveData((liveData) => {
-                        liveData.push(data);
+                if (init.current) {
+                    socket.on(EXPERIMENT_DATA, (data: ExperimentData) => {
+                        setLiveData((liveData) => {
+                            const newData = [ ...liveData, data ];
 
-                        return liveData;
+                            return newData;
+                        });
                     });
-                });
+
+                    init.current = false;
+                }
             });
 
         return () => {
-            //socket.off(EXPERIMENT_DATA);
+            socket.off(EXPERIMENT_DATA);
         };
     }, []);
 
     return (
         <div>
             { liveData.map((experimentData: ExperimentData, index: number) => (
-                <div key={ index } >
+                <div key={ index }>
                     <span>{ experimentData.decisionRule }</span>
                     <span>{ experimentData.byzantineSwarmStyle }</span>
                     <span>{ experimentData.consensusAlgorithm }</span>
