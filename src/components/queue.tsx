@@ -1,11 +1,9 @@
 import { FunctionComponent, ReactElement, useState } from "react";
 import { getQueue } from "../apis";
 import { Experiment } from "../model";
-import { io } from "socket.io-client";
 import { RUN_EXPERIMENTS } from "../constants";
+import { socket } from "../utils";
 
-const socket = io(process.env.REACT_APP_ENDPOINT as string);
-socket.on("A", (a)=>console.log(a))
 interface QueueProps {
     queue: Experiment[];
 }
