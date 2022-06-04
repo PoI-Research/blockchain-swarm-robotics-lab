@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactElement, useEffect, useRef, useState } from "react";
-import { getExperimentData } from "../apis";
+import { clearExperimentData, deleteExperimentData, getExperimentData } from "../apis";
 import { EXPERIMENT_DATA } from "../constants";
 import { ExperimentData } from "../model";
 import { socket } from "../utils";
@@ -32,8 +32,17 @@ export const ExperimentDataView: FunctionComponent = (): ReactElement => {
         };
     }, []);
 
+    const clearData = (): void => {
+        clearExperimentData().then(() => getExperimentData().then((response) => setLiveData(response)));
+    };
+
+    const deleteExperiment = (id: number) => {
+        deleteExperimentData(id).then(() => getExperimentData().then((response) => setLiveData(response)));
+    };
+
     return (
         <div>
+            <input type="button" value="Clear Data" onClick={ clearData } />
             { liveData.map((experimentData: ExperimentData, index: number) => (
                 <div key={ index }>
                     <span>{ experimentData.decisionRule }</span>
@@ -46,6 +55,7 @@ export const ExperimentDataView: FunctionComponent = (): ReactElement => {
                     <span>{ experimentData.secondsTaken }</span>
                     <span>{ experimentData.numberOfBlacks }</span>
                     <span>{ experimentData.numberOfWhites }</span>
+                    <input type="button" value="Delete" onClick={ () => deleteExperiment(index) } />
                 </div>
             )) }
         </div>
