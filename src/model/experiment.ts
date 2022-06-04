@@ -3,7 +3,7 @@ import { BYZANTINE_SWARM_STYLE, CONSENSUS_ALGORITHM, DECISION_RULE } from "../co
 export interface Experiment {
     decisionRule: DECISION_RULE;
     percentageOfBlackTiles: number;
-    consensusAlgorithm: string;
+    consensusAlgorithm: CONSENSUS_ALGORITHM;
     useClassicalApproach: boolean;
     numberOfByzantineRobots: number;
     byzantineSwarmStyle: BYZANTINE_SWARM_STYLE;
