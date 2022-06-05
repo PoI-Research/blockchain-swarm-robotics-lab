@@ -85,7 +85,7 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                 height: "calc(100vh - (72px + 6em))",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between"
+                justifyContent: "flex-start"
             } }
         >
             <Box sx={ { display: "flex", justifyContent: "space-between", marginBottom: "1em" } }>
@@ -103,7 +103,7 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                 />
             ) }
             <Paper sx={ { marginTop: "1em", overflow: "hidden", marginBottom: "2em" } }>
-                <TableContainer sx={{maxHeight:"100%"}}>
+                <TableContainer sx={ { maxHeight: "100%" } }>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
@@ -149,7 +149,7 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                         </TableBody>
                     </Table>
                 </TableContainer>
-                </Paper>
-            </Box>
+            </Paper>
+        </Box>
     );
 };
