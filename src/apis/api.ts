@@ -55,3 +55,11 @@ export const deleteExperimentData = (id: number): Promise<void> => {
         return Promise.resolve();
     });
 };
+
+export const downloadCSV = (): Promise<string> => {
+    return fetch(`${ endpoint }/convert-to-csv`).then(async (response: Response) => {
+        const csv = await response.text();
+
+        return Promise.resolve(csv);
+    });
+}

@@ -1,4 +1,4 @@
-import { DeleteForever } from "@mui/icons-material";
+import { DeleteForever, Download } from "@mui/icons-material";
 import {
     Box,
     Button,
@@ -15,7 +15,7 @@ import {
     Typography
 } from "@mui/material";
 import { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
-import { clearExperimentData, deleteExperimentData, getExperimentData } from "../apis";
+import { clearExperimentData, deleteExperimentData, downloadCSV, getExperimentData } from "../apis";
 import { CONSENSUS_ALGORITHM, EXPERIMENT_DATA } from "../constants";
 import { Experiment, ExperimentData } from "../model";
 import { socket } from "../utils";
@@ -77,6 +77,18 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
 
     const deleteExperiment = (id: number) => {
         deleteExperimentData(id).then(() => getExperimentData().then((response) => setLiveData(response)));
+    };
+
+    const download = (): void => {
+        downloadCSV().then((response) => {
+            const blob = new Blob([ response ], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "experiment-data.csv";
+            link.click();
+        });
     };
 
     return (
@@ -150,6 +162,11 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                     </Table>
                 </TableContainer>
             </Paper>
+            <Box sx={ { display: "flex", justifyContent: "flex-end" } }>
+                <Button startIcon={ <Download /> } onClick={ download }>
+                    Download CSV
+                </Button>
+            </Box>
         </Box>
     );
 };
