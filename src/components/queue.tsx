@@ -85,7 +85,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
 
     const generateQueueElement = (experiment: Experiment, index: number): ReactElement => {
         return (
-            <ListItem key={ index }>
+            <ListItem key={ index } sx={{padding: 0}}>
                 <Paper
                     variant="outlined"
                     sx={ {

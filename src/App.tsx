@@ -49,11 +49,11 @@ export const App: FunctionComponent = (): ReactElement => {
                     <AppTopBar />
                 </Box>
                 <Box>
-                    <Grid container sx={ { minHeight: "calc(100vh - (72px + 4em))" } }>
+                    <Grid container sx={ { minHeight: "calc(100vh - (72px))" } }>
                         <Grid item xs={ 2 }>
                             <Box
                                 sx={ {
-                                    padding: "2em",
+                                    padding: "1em",
                                     minHeight: "calc(100% - 2em)",
                                     borderRight: 1,
                                     borderColor: "divider"
@@ -65,7 +65,7 @@ export const App: FunctionComponent = (): ReactElement => {
                         <Grid item xs={ 3 }>
                             <Box
                                 sx={ {
-                                    padding: "2em",
+                                    padding: "1em",
                                     minHeight: "calc(100% - 2em)",
                                     borderRight: 1,
                                     borderColor: "divider"
@@ -85,7 +85,7 @@ export const App: FunctionComponent = (): ReactElement => {
                         <Grid item xs={ 7 }>
                             <Box
                                 sx={ {
-                                    padding: "2em",
+                                    padding: "1em",
                                     minHeight: "calc(100% - 2em)",
                                     borderRight: 1,
                                     borderColor: "divider"
