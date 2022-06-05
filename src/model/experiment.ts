@@ -21,4 +21,5 @@ export interface ExperimentData {
     decisionRule: DECISION_RULE;
     byzantineSwarmStyle: BYZANTINE_SWARM_STYLE;
     numberOfByzantineRobots: number;
+    id: number;
 }
