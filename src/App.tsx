@@ -44,17 +44,17 @@ export const App: FunctionComponent = (): ReactElement => {
 
     return (
         <AppThemeProvider>
-            <Paper variant="outlined" square sx={ { border: "none", minHeight: "100vmin", height: "100%" } }>
+            <Paper variant="outlined" square sx={ { border: "none", minHeight: "100vh", height: "100%" } }>
                 <Box sx={ { flexGrow: 1 } }>
                     <AppTopBar />
                 </Box>
-                <Box sx={ { minHeight: "100vmin" } }>
-                    <Grid container spacing={ 2 } sx={ { minHeight: "100vmin" } }>
+                <Box>
+                    <Grid container sx={ { minHeight: "calc(100vh - (72px + 4em))" } }>
                         <Grid item xs={ 2 }>
                             <Box
                                 sx={ {
-                                    padding: "1em",
-                                    height: "100%",
+                                    padding: "2em",
+                                    minHeight: "calc(100% - 2em)",
                                     borderRight: 1,
                                     borderColor: "divider"
                                 } }
@@ -65,11 +65,10 @@ export const App: FunctionComponent = (): ReactElement => {
                         <Grid item xs={ 3 }>
                             <Box
                                 sx={ {
-                                    paddingTop: "1em",
-                                    height: "100%",
+                                    padding: "2em",
+                                    minHeight: "calc(100% - 2em)",
                                     borderRight: 1,
-                                    borderColor: "divider",
-                                    paddingRight: "1em"
+                                    borderColor: "divider"
                                 } }
                             >
                                 <Queue
@@ -86,11 +85,10 @@ export const App: FunctionComponent = (): ReactElement => {
                         <Grid item xs={ 7 }>
                             <Box
                                 sx={ {
-                                    paddingTop: "1em",
-                                    height: "100%",
+                                    padding: "2em",
+                                    minHeight: "calc(100% - 2em)",
                                     borderRight: 1,
-                                    borderColor: "divider",
-                                    paddingRight: "1em"
+                                    borderColor: "divider"
                                 } }
                             >
                                 <ExperimentDataView

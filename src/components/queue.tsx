@@ -153,7 +153,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
     };
 
     return (
-        <Box>
+        <Box sx={ { display: "flex", flexDirection: "column", justifyContent: "space-between", height: "calc(100vh - (72px + 6em))" } }>
             <Box sx={ { display: "flex", justifyContent: "space-between", marginBottom: "1em" } }>
                 <Typography variant="h6">Queue</Typography>
                 <Button startIcon={ <DeleteForever /> } onClick={ clearQueue }>
@@ -161,7 +161,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
                 </Button>
             </Box>
             <Divider />
-            <List sx={ { overflowY: "auto", height: "calc(100vh - 273.5px)" } }>
+            <List sx={ { overflowY: "auto", flexGrow: 2} }>
                 { queue?.map((experiment: Experiment, index: number) => generateQueueElement(experiment, index)) }
             </List>
             <Divider />

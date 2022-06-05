@@ -52,7 +52,7 @@ export const ExperimentForm: FunctionComponent<ExperimentFormProps> = (props: Ex
     };
 
     return (
-        <Stack spacing={ 2 } sx={ { padding: "1em" } }>
+        <Stack spacing={ 2 }>
             <TextField
                 label="Number of Robots"
                 type="number"
