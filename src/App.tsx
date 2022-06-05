@@ -2,11 +2,15 @@ import { Box, Grid, Paper } from "@mui/material";
 import React, { FunctionComponent, ReactElement, useEffect, useState } from "react";
 import { clearQueue, deleteExperiment, getQueue } from "./apis";
 import { AppTopBar, ExperimentDataView, ExperimentForm, Queue } from "./components";
+import { EXPERIMENT_COMPLETED, RUN_EXPERIMENTS } from "./constants";
 import { Experiment } from "./model/experiment";
 import { AppThemeProvider } from "./theme";
+import { socket } from "./utils";
 
 export const App: FunctionComponent = (): ReactElement => {
     const [ queue, setQueue ] = useState<Experiment[]>([]);
+    const [ repetitions, setRepetitions ] = useState<number>(15);
+    const [ isRunning, setIsRunning ] = useState<boolean>(false);
 
     useEffect(() => {
         getQueue().then((response: Experiment[]) => setQueue(response));
@@ -24,6 +28,20 @@ export const App: FunctionComponent = (): ReactElement => {
         deleteExperiment(id).then(() => getQueue().then((response: Experiment[]) => setQueue(response)));
     };
 
+     const runExperiment = (): void => {
+        setIsRunning(true);
+        socket.emit(RUN_EXPERIMENTS, repetitions);
+        socket.on(EXPERIMENT_COMPLETED, () => {
+            setIsRunning(false);
+        });
+    };
+
+    useEffect(() => {
+        return () => {
+            socket.off(EXPERIMENT_COMPLETED);
+        };
+    }, []);
+
     return (
         <AppThemeProvider>
             <Paper variant="outlined" square sx={ { border: "none", minHeight: "100vmin", height: "100%" } }>
@@ -38,7 +56,7 @@ export const App: FunctionComponent = (): ReactElement => {
                                     padding: "1em",
                                     height: "100%",
                                     borderRight: 1,
-                                    borderColor: "divider",
+                                    borderColor: "divider"
                                 } }
                             >
                                 <ExperimentForm addToQueue={ addToQueue } />
@@ -55,9 +73,13 @@ export const App: FunctionComponent = (): ReactElement => {
                                 } }
                             >
                                 <Queue
+                                    repetitions={ repetitions }
+                                    setRepetitions={ setRepetitions }
                                     queue={ queue }
                                     clearQueue={ clearExperiments }
                                     deleteAnExperiment={ deleteAnExperiment }
+                                    isRunning={ isRunning }
+                                    startRunning={ runExperiment }
                                 />
                             </Box>
                         </Grid>
@@ -71,7 +93,11 @@ export const App: FunctionComponent = (): ReactElement => {
                                     paddingRight: "1em"
                                 } }
                             >
-                                <ExperimentDataView />
+                                <ExperimentDataView
+                                    queue={ queue }
+                                    repetitions={ repetitions }
+                                    isRunning={ isRunning }
+                                />
                             </Box>
                         </Grid>
                     </Grid>
