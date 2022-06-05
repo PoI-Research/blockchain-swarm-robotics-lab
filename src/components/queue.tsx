@@ -4,15 +4,16 @@ import {
     CircleOutlined,
     ContrastOutlined,
     DeleteForever,
-    GridView,
     PlayArrow,
     SmartToy
 } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
     Box,
     Button,
     Chip,
     CircularProgress,
+    Divider,
     IconButton,
     List,
     ListItem,
@@ -20,24 +21,25 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import { FunctionComponent, ReactElement, useState } from "react";
-import { BYZANTINE_SWARM_STYLE, CONSENSUS_ALGORITHM, DECISION_RULE, RUN_EXPERIMENTS } from "../constants";
+import { FunctionComponent, ReactElement } from "react";
+import {
+    BYZANTINE_SWARM_STYLE,
+    CONSENSUS_ALGORITHM,
+    DECISION_RULE
+} from "../constants";
 import { Experiment } from "../model";
-import { socket } from "../utils";
 
 interface QueueProps {
     queue: Experiment[];
     clearQueue: () => void;
     deleteAnExperiment: (id: number) => void;
+    repetitions: number;
+    setRepetitions: (repetitions: number) => void;
+    startRunning: () => void;
+    isRunning: boolean;
 }
 export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactElement => {
-    const { queue, clearQueue, deleteAnExperiment } = props;
-
-    const [ repetitions, setRepetitions ] = useState<number>(15);
-
-    const runExperiment = (): void => {
-        socket.emit(RUN_EXPERIMENTS, repetitions);
-    };
+    const { queue, clearQueue, deleteAnExperiment, repetitions, setRepetitions, isRunning, startRunning } = props;
 
     const getDecisionRule = (rule: DECISION_RULE): string => {
         switch (rule) {
@@ -129,7 +131,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
                     <span>
                         <Chip variant="outlined" label={ getDecisionRule(experiment?.decisionRule) } />
                     </span>
-                    <span>{ !experiment?.useClassicalApproach && <GridView /> }</span>
+                    <span>{ experiment?.useClassicalApproach && <Chip color="primary" label="Classical" /> }</span>
                     { !experiment?.useClassicalApproach && (
                         <span>
                             <Chip color="primary" label={ formatConsensusAlgorithm(experiment?.consensusAlgorithm) } />
@@ -141,6 +143,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
                     { experiment?.numberOfByzantineRobots > 0 && (
                         <span>{ generateByzantineSwarmStyleICon(experiment?.byzantineSwarmStyle) }</span>
                     ) }
+                    <Divider orientation="vertical" flexItem />
                     <IconButton onClick={ () => deleteAnExperiment(index) }>
                         <DeleteForever />
                     </IconButton>
@@ -151,21 +154,39 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
 
     return (
         <Box>
-            <Button startIcon={ <DeleteForever /> } onClick={ clearQueue }>
-                Clear Queue
-            </Button>
-            <List>
+            <Box sx={ { display: "flex", justifyContent: "space-between", marginBottom: "1em" } }>
+                <Typography variant="h6">Queue</Typography>
+                <Button startIcon={ <DeleteForever /> } onClick={ clearQueue }>
+                    Clear Queue
+                </Button>
+            </Box>
+            <Divider />
+            <List sx={ { overflowY: "auto", height: "calc(100vh - 273.5px)" } }>
                 { queue?.map((experiment: Experiment, index: number) => generateQueueElement(experiment, index)) }
             </List>
-            <TextField
-                type="number"
-                value={ repetitions }
-                onChange={ (e) => setRepetitions(parseInt(e.target.value)) }
-                label="Repetitions"
-            />
-            <Button variant="contained" startIcon={ <PlayArrow /> } onClick={ runExperiment }>
-                Run Experiments
-            </Button>
+            <Divider />
+            <Box sx={ { display: "flex", justifyContent: "space-between", marginTop: "2em" } }>
+                <TextField
+                    type="number"
+                    value={ repetitions }
+                    onChange={ (e) => setRepetitions(parseInt(e.target.value)) }
+                    label="Repetitions"
+                    disabled={ isRunning }
+                />
+                <LoadingButton
+                    loading={ isRunning }
+                    loadingPosition="start"
+                    variant="contained"
+                    startIcon={ <PlayArrow /> }
+                    onClick={ startRunning }
+                >
+                    Run Experiments
+                </LoadingButton>
+            </Box>
         </Box>
     );
 };
+
+Queue.defaultProps = {
+    isRunning: false
+}
