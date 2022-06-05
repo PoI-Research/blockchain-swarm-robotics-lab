@@ -1,5 +1,5 @@
 import { createTheme, PaletteMode, useMediaQuery } from "@mui/material";
-import { teal } from "@mui/material/colors";
+import { red } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/system";
 import React, { useEffect } from "react";
 import { PropsWithChildren, ReactElement, useMemo, useState } from "react";
@@ -22,7 +22,9 @@ export const AppThemeProvider = (props: PropsWithChildren<any>): ReactElement =>
             createTheme({
                 palette: {
                     mode: mode,
-                    primary: teal
+                    primary: {
+                        main: red[900]
+                    }
                 }
             }),
         [ mode ]
