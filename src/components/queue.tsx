@@ -33,9 +33,19 @@ interface QueueProps {
     setRepetitions: (repetitions: number) => void;
     startRunning: () => void;
     isRunning: boolean;
+    prevIsRunning: boolean;
 }
 export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactElement => {
-    const { queue, clearQueue, deleteAnExperiment, repetitions, setRepetitions, isRunning, startRunning } = props;
+    const {
+        queue,
+        clearQueue,
+        deleteAnExperiment,
+        repetitions,
+        setRepetitions,
+        isRunning,
+        startRunning,
+        prevIsRunning
+    } = props;
 
     const getDecisionRule = (rule: DECISION_RULE): string => {
         switch (rule) {
@@ -85,7 +95,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
 
     const generateQueueElement = (experiment: Experiment, index: number): ReactElement => {
         return (
-            <ListItem key={ index } sx={{padding: 0}}>
+            <ListItem key={ index } sx={ { padding: 0 } }>
                 <Paper
                     variant="outlined"
                     sx={ {
@@ -177,7 +187,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
                     disabled={ isRunning }
                 />
                 <LoadingButton
-                    loading={ isRunning }
+                    loading={ isRunning || prevIsRunning }
                     loadingPosition="start"
                     variant="contained"
                     startIcon={ <PlayArrow /> }

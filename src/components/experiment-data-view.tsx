@@ -14,7 +14,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
+import { FunctionComponent, ReactElement, useEffect, useMemo, useState } from "react";
 import { clearExperimentData, deleteExperimentData, downloadCSV, getExperimentData } from "../apis";
 import { CONSENSUS_ALGORITHM, EXPERIMENT_DATA } from "../constants";
 import { Experiment, ExperimentData } from "../model";
@@ -35,8 +35,6 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
     const [ liveData, setLiveData ] = useState<ExperimentData[]>([]);
     const [ receivedDataRows, setReceivedDataRows ] = useState<number>(0);
 
-    const init = useRef(true);
-
     const totalData = useMemo(() => {
         return repetitions * queue?.length;
     }, [ repetitions, queue ]);
@@ -52,29 +50,26 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
             return;
         }
 
-        if (init.current) {
-            getExperimentData()
-                .then((response) => {
-                    setLiveData(response);
-                })
-                .finally(() => {
-                    socket.on(EXPERIMENT_DATA, (data: ExperimentData) => {
-                        setIsRunningToTrue();
-                        setReceivedDataRows((rows) => rows + 1);
-                        setLiveData((liveData) => {
-                            const newData = [ ...liveData, data ];
+        getExperimentData()
+            .then((response) => {
+                setLiveData(response);
+            })
+            .finally(() => {
+                socket.off(EXPERIMENT_DATA);
+                socket.on(EXPERIMENT_DATA, (data: ExperimentData) => {
+                    setIsRunningToTrue();
+                    setReceivedDataRows((rows) => rows + 1);
+                    setLiveData((liveData) => {
+                        const newData = [ ...liveData, data ];
 
-                            return newData;
-                        });
+                        return newData;
                     });
                 });
+            });
 
-            init.current = false;
-
-            return () => {
-                socket.off(EXPERIMENT_DATA);
-            };
-        }
+        return () => {
+            socket.off(EXPERIMENT_DATA);
+        };
     }, [ setIsRunningToTrue ]);
 
     const clearData = (): void => {

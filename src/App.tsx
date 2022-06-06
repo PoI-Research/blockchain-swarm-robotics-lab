@@ -11,6 +11,7 @@ export const App: FunctionComponent = (): ReactElement => {
     const [ queue, setQueue ] = useState<Experiment[]>([]);
     const [ repetitions, setRepetitions ] = useState<number>(15);
     const [ isRunning, setIsRunning ] = useState<boolean>(false);
+    const [ prevIsRunning, setPrevIsRunning ] = useState<boolean>(false);
 
     useEffect(() => {
         getQueue().then((response: Experiment[]) => setQueue(response));
@@ -31,8 +32,14 @@ export const App: FunctionComponent = (): ReactElement => {
     const runExperiment = (): void => {
         setIsRunning(true);
         socket.emit(RUN_EXPERIMENTS, repetitions);
+        handleExperimentCompletion();
+    };
+
+    const handleExperimentCompletion = (): void => {
         socket.on(EXPERIMENT_COMPLETED, () => {
             setIsRunning(false);
+            setPrevIsRunning(false);
+            socket.off(EXPERIMENT_COMPLETED);
         });
     };
 
@@ -43,9 +50,13 @@ export const App: FunctionComponent = (): ReactElement => {
     }, []);
 
     const setIsRunningToTrue = useCallback((): void => {
-        console.log("!")
-        setIsRunning(true);
-    }, []);
+        if (prevIsRunning || isRunning) {
+            return;
+        }
+
+        handleExperimentCompletion();
+        setPrevIsRunning(true);
+    }, [ isRunning, prevIsRunning ]);
 
     return (
         <AppThemeProvider>
@@ -84,6 +95,7 @@ export const App: FunctionComponent = (): ReactElement => {
                                     deleteAnExperiment={ deleteAnExperiment }
                                     isRunning={ isRunning }
                                     startRunning={ runExperiment }
+                                    prevIsRunning={ prevIsRunning }
                                 />
                             </Box>
                         </Grid>
