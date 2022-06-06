@@ -24,12 +24,13 @@ interface ExperimentDataViewProps {
     queue: Experiment[];
     repetitions: number;
     isRunning: boolean;
+    setIsRunningToTrue: () => void;
 }
 
 export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
     props: ExperimentDataViewProps
 ): ReactElement => {
-    const { queue, repetitions, isRunning } = props;
+    const { queue, repetitions, isRunning, setIsRunningToTrue } = props;
 
     const [ liveData, setLiveData ] = useState<ExperimentData[]>([]);
     const [ receivedDataRows, setReceivedDataRows ] = useState<number>(0);
@@ -54,6 +55,7 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
             .finally(() => {
                 if (init.current) {
                     socket.on(EXPERIMENT_DATA, (data: ExperimentData) => {
+                        setIsRunningToTrue();
                         setReceivedDataRows((rows) => rows + 1);
                         setLiveData((liveData) => {
                             const newData = [ ...liveData, data ];
@@ -69,7 +71,7 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
         return () => {
             socket.off(EXPERIMENT_DATA);
         };
-    }, []);
+    }, [ setIsRunningToTrue ]);
 
     const clearData = (): void => {
         clearExperimentData().then(() => getExperimentData().then((response) => setLiveData(response)));

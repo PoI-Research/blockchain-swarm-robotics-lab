@@ -95,6 +95,7 @@ export const App: FunctionComponent = (): ReactElement => {
                                     queue={ queue }
                                     repetitions={ repetitions }
                                     isRunning={ isRunning }
+                                    setIsRunningToTrue={ () => setIsRunning(true) }
                                 />
                             </Box>
                         </Grid>

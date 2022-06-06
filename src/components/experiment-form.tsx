@@ -24,7 +24,7 @@ interface ExperimentFormProps {
 export const ExperimentForm: FunctionComponent<ExperimentFormProps> = (props: ExperimentFormProps): ReactElement => {
     const { addToQueue } = props;
 
-    const [ decisionRule, setDecisionRule ] = useState<DECISION_RULE>(0);
+    const [ decisionRule, setDecisionRule ] = useState<DECISION_RULE>(1);
     const [ percentageOfBlackTiles, setPercentageOfBlackTiles ] = useState<number>(80);
     const [ consensusAlgorithm, setConsensusAlgorithm ] = useState<CONSENSUS_ALGORITHM>(CONSENSUS_ALGORITHM.POW);
     const [ useClassicalApproach, setUseClassicalApproach ] = useState<boolean>(false);
