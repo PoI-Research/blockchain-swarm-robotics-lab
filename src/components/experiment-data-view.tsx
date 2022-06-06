@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { FunctionComponent, ReactElement, useEffect, useMemo, useState } from "react";
 import { clearExperimentData, deleteExperimentData, downloadCSV, getExperimentData } from "../apis";
-import { CONSENSUS_ALGORITHM, EXPERIMENT_DATA } from "../constants";
+import { BYZANTINE_SWARM_STYLE, CONSENSUS_ALGORITHM, DECISION_RULE, EXPERIMENT_DATA } from "../constants";
 import { Experiment, ExperimentData } from "../model";
 import { socket } from "../utils";
 
@@ -92,6 +92,30 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
         });
     };
 
+    const getDecisionRule = (rule: DECISION_RULE): string => {
+        switch (rule) {
+            case DECISION_RULE.DC:
+                return "DC";
+            case DECISION_RULE.DMMD:
+                return "DMMD";
+            case DECISION_RULE.DMVD:
+                return "DMVD";
+        }
+    };
+
+    const getByzantineSwarmStyle = (style: BYZANTINE_SWARM_STYLE): string => {
+        switch (style) {
+            case BYZANTINE_SWARM_STYLE.BLACK_BYZANTINE_ROBOTS:
+                return "Black Only";
+            case BYZANTINE_SWARM_STYLE.WHITE_BYZANTINE_ROBOTS:
+                return "White Only";
+            case BYZANTINE_SWARM_STYLE.BLACK_WHITE_BYZANTINE_ROBOTS:
+                return "Black and White";
+            default:
+                return "No Byzantine Robots";
+        }
+    };
+
     return (
         <Box
             sx={ {
@@ -127,8 +151,8 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                                 <TableCell>Approach</TableCell>
                                 <TableCell>No. of Byzantine Robots</TableCell>
                                 <TableCell>Byzantine Swarm Style</TableCell>
-                                <TableCell>No. of Black Tiles</TableCell>
-                                <TableCell>No. of White Tiles</TableCell>
+                                <TableCell>No. of Black Robots</TableCell>
+                                <TableCell>No. of White Robots</TableCell>
                                 <TableCell>Time Taken(s)</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -139,7 +163,7 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                                     <TableCell>{ experimentData.id }</TableCell>
                                     <TableCell>{ experimentData.numberOfRobots }</TableCell>
                                     <TableCell>{ experimentData.percentageOfBlackTiles }</TableCell>
-                                    <TableCell>{ experimentData.decisionRule }</TableCell>
+                                    <TableCell>{ getDecisionRule(experimentData.decisionRule) }</TableCell>
                                     <TableCell>
                                         { experimentData.isClassical
                                             ? "Classical"
@@ -148,7 +172,8 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                                                 : "PoW" }
                                     </TableCell>
                                     <TableCell>{ experimentData.numberOfByzantineRobots }</TableCell>
-                                    <TableCell>{ experimentData.byzantineSwarmStyle }</TableCell>
+                                    <TableCell>{
+                                        getByzantineSwarmStyle(experimentData.byzantineSwarmStyle) }</TableCell>
                                     <TableCell>{ experimentData.numberOfBlacks }</TableCell>
                                     <TableCell>{ experimentData.numberOfWhites }</TableCell>
                                     <TableCell>{ experimentData.secondsTaken }</TableCell>
