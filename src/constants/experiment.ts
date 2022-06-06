@@ -1,7 +1,7 @@
 export enum DECISION_RULE {
-    DMVD,
-    DC,
-    DMMD
+    DMVD=1,
+    DC=2,
+    DMMD=3
 }
 
 export enum BYZANTINE_SWARM_STYLE {
