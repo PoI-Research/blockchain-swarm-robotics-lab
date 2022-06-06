@@ -97,7 +97,6 @@ export const ExperimentForm: FunctionComponent<ExperimentFormProps> = (props: Ex
                 <FormControlLabel
                     control={
                         <Checkbox
-                            defaultChecked
                             onChange={ (e) => setUseClassicalApproach(!e.target.checked) }
                             checked={ !useClassicalApproach }
                         />

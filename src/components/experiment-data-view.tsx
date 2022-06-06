@@ -48,12 +48,16 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
     }, [ isRunning ]);
 
     useEffect(() => {
-        getExperimentData()
-            .then((response) => {
-                setLiveData(response);
-            })
-            .finally(() => {
-                if (init.current) {
+        if (!setIsRunningToTrue) {
+            return;
+        }
+
+        if (init.current) {
+            getExperimentData()
+                .then((response) => {
+                    setLiveData(response);
+                })
+                .finally(() => {
                     socket.on(EXPERIMENT_DATA, (data: ExperimentData) => {
                         setIsRunningToTrue();
                         setReceivedDataRows((rows) => rows + 1);
@@ -63,14 +67,14 @@ export const ExperimentDataView: FunctionComponent<ExperimentDataViewProps> = (
                             return newData;
                         });
                     });
+                });
 
-                    init.current = false;
-                }
-            });
+            init.current = false;
 
-        return () => {
-            socket.off(EXPERIMENT_DATA);
-        };
+            return () => {
+                socket.off(EXPERIMENT_DATA);
+            };
+        }
     }, [ setIsRunningToTrue ]);
 
     const clearData = (): void => {

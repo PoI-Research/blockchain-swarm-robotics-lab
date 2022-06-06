@@ -1,5 +1,5 @@
 import { Box, Grid, Paper } from "@mui/material";
-import React, { FunctionComponent, ReactElement, useEffect, useState } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useEffect, useState } from "react";
 import { clearQueue, deleteExperiment, getQueue } from "./apis";
 import { AppTopBar, ExperimentDataView, ExperimentForm, Queue } from "./components";
 import { EXPERIMENT_COMPLETED, RUN_EXPERIMENTS } from "./constants";
@@ -28,7 +28,7 @@ export const App: FunctionComponent = (): ReactElement => {
         deleteExperiment(id).then(() => getQueue().then((response: Experiment[]) => setQueue(response)));
     };
 
-     const runExperiment = (): void => {
+    const runExperiment = (): void => {
         setIsRunning(true);
         socket.emit(RUN_EXPERIMENTS, repetitions);
         socket.on(EXPERIMENT_COMPLETED, () => {
@@ -40,6 +40,11 @@ export const App: FunctionComponent = (): ReactElement => {
         return () => {
             socket.off(EXPERIMENT_COMPLETED);
         };
+    }, []);
+
+    const setIsRunningToTrue = useCallback((): void => {
+        console.log("!")
+        setIsRunning(true);
     }, []);
 
     return (
@@ -95,7 +100,7 @@ export const App: FunctionComponent = (): ReactElement => {
                                     queue={ queue }
                                     repetitions={ repetitions }
                                     isRunning={ isRunning }
-                                    setIsRunningToTrue={ () => setIsRunning(true) }
+                                    setIsRunningToTrue={ setIsRunningToTrue }
                                 />
                             </Box>
                         </Grid>
