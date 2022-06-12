@@ -192,6 +192,7 @@ export const Queue: FunctionComponent<QueueProps> = (props: QueueProps): ReactEl
                     variant="contained"
                     startIcon={ <PlayArrow /> }
                     onClick={ startRunning }
+                    disabled={ queue.length === 0 }
                 >
                     Run Experiments
                 </LoadingButton>
